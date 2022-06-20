@@ -2,10 +2,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ContactsManager {
+    Scanner scanner = new Scanner(System.in);
 
     protected String directory = "Contacts";
     protected String fileName = "contacts.text";
@@ -39,7 +42,6 @@ public class ContactsManager {
             contactText.add("Billy Gibbons | 2818704453 |");
 
             if(Files.exists(contactFile)) {
-                System.out.println("Importing Contacts");
                 Files.write(contactFile, contactText);
             }
 
@@ -47,6 +49,81 @@ public class ContactsManager {
             e.printStackTrace();
         }
 
+    }
+
+    public void addContact(){
+        try{
+            Path contactDirectory = Paths.get(directory);
+            Path contactFile = Paths.get(directory, fileName);
+            System.out.println("Please enter name:");
+            String nameInput = scanner.nextLine();
+            System.out.println("Please enter number:");
+            String numInput =scanner.nextLine();
+
+            Files.write(contactFile, List.of(nameInput + " | " + numInput + " |"), StandardOpenOption.APPEND);
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void deleteContact(){
+        try{
+            List<String> contactData = Files.readAllLines(Paths.get(directory, fileName));
+            System.out.println("Please enter name to be deleted:");
+            String input = scanner.nextLine();
+            List<String> newList = new ArrayList<>();
+
+            for(String contact: contactData){
+                if(contact.contains(input)){
+                    continue;
+                }
+                newList.add(contact);
+            }
+
+            Files.write(Paths.get(directory, fileName), newList);
+            contactData = Files.readAllLines(Paths.get(directory, fileName));
+            printList();
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void printList(){
+        try{
+            List<String> contactData = Files.readAllLines(Paths.get(directory, fileName));
+            System.out.println("Name | Phone Number\n");
+
+            for (String contact: contactData){
+                System.out.println(contact);
+            }
+            System.out.println("");
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void searchContact(){
+        try{
+            List<String> contactData = Files.readAllLines(Paths.get(directory, fileName));
+            System.out.println("Please enter name to be searched:");
+            String input = scanner.nextLine();
+            System.out.println("Name | Phone Number\n");
+
+            for(String contact: contactData) {
+                if (contact.contains(input)) {
+                    System.out.println(contact);
+                }
+            }
+            System.out.println("");
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
 }
