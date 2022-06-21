@@ -4,8 +4,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+
 
 public class ContactsManager {
     Scanner scanner = new Scanner(System.in);
@@ -59,6 +61,7 @@ public class ContactsManager {
             String nameInput = scanner.nextLine();
             System.out.println("Please enter number:");
             String numInput =scanner.nextLine();
+//            System.out.println(numInput.length());
 
             Files.write(contactFile, List.of(nameInput + " | " + numInput + " |"), StandardOpenOption.APPEND);
 
@@ -122,6 +125,26 @@ public class ContactsManager {
             }
             System.out.println("");
         }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
+    //got info for to array from: https://www.delftstack.com/howto/java/how-to-perform-string-to-string-array-conversion-in-java/
+    public void addDashes(String num){
+        try {
+            if(num.length() == 10){
+                String[] arrayString = num.split("(?!^)");
+                List<String> newList = new ArrayList<>();
+
+                for(String digit: arrayString){
+                    newList.add(digit);
+                }
+//                System.out.println(Arrays.toString(arrayString));
+
+            }
+
+        }catch(Exception e){
             e.printStackTrace();
         }
     }
