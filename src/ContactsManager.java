@@ -61,7 +61,7 @@ public class ContactsManager {
             String nameInput = scanner.nextLine();
             System.out.println("Please enter number:");
             String numInput =scanner.nextLine();
-//            System.out.println(numInput.length());
+            numInput = addDashes(numInput);
 
             Files.write(contactFile, List.of(nameInput + " | " + numInput + " |"), StandardOpenOption.APPEND);
 
@@ -130,23 +130,26 @@ public class ContactsManager {
     }
 
 
-    //got info for to array from: https://www.delftstack.com/howto/java/how-to-perform-string-to-string-array-conversion-in-java/
-    public void addDashes(String num){
+    //got info for pattern from: https://howtodoinjava.com/java/string/format-phone-number/#:~:text=Given%20below%20is%20a%20Java,%2D%23%23%23%23%20format.&text=String%20input%20%3D%20%221234567890%22%20%3B,%241)%20%242%2D%243%22%20)%3B
+    public String addDashes(String num){
         try {
             if(num.length() == 10){
-                String[] arrayString = num.split("(?!^)");
-                List<String> newList = new ArrayList<>();
-
-                for(String digit: arrayString){
-                    newList.add(digit);
-                }
-//                System.out.println(Arrays.toString(arrayString));
-
+               String one = num.substring(0,3);
+               String two = num.substring(3,6);
+               String three = num.substring(6);
+//                System.out.printf("(%s) %s-%s%n",one,two,three);
+                return "(" + one + ") " + two + "-" + three;
             }
+
+            if(num.length() == 7){
+                return num.replaceFirst("(\\d{3})(\\d+)", "$1-$2");
+            }
+
 
         }catch(Exception e){
             e.printStackTrace();
         }
+        return num;
     }
 
 }
