@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,18 +14,18 @@ public class ContactsManager {
     protected String directory = "Contacts";
     protected String fileName = "contacts.text";
 
-    public void createContactList(){
+    public void createContactList() {
 
-        try{
+        try {
             Path contactDirectory = Paths.get(directory);
             Path contactFile = Paths.get(directory, fileName);
 
-            if(Files.notExists(contactDirectory)){
+            if (Files.notExists(contactDirectory)) {
                 System.out.println("Creating new " + contactDirectory + " directory");
                 Files.createDirectories(contactDirectory);
             }
 
-            if(Files.notExists(contactFile)){
+            if (Files.notExists(contactFile)) {
                 System.out.println("[New file created]");
                 Files.createFile(contactFile);
             }
@@ -43,44 +42,50 @@ public class ContactsManager {
             contactText.add("Aaron Lewis | 2812548871 |");
             contactText.add("Billy Gibbons | 2818704453 |");
 
-            if(Files.exists(contactFile)) {
+            if (Files.exists(contactFile)) {
                 Files.write(contactFile, contactText);
             }
 
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void addContact(){
-        try{
-            Path contactDirectory = Paths.get(directory);
+    public void addContact() {
+        try {
             Path contactFile = Paths.get(directory, fileName);
-            System.out.println("Please enter name:");
+            System.out.println("Please enter contacts first and last name:");
             String nameInput = scanner.nextLine();
             System.out.println("Please enter number:");
-            String numInput =scanner.nextLine();
-            numInput = addDashes(numInput);
+            boolean willRunNum = true;
+            do {
+                String numInput = scanner.nextLine();
+                if (numInput.length() == 10 || numInput.length() == 7) {
+                    numInput = numberFormat(numInput);
+                    Files.write(contactFile, List.of(nameInput + " | " + numInput + " |"), StandardOpenOption.APPEND);
+                    willRunNum = false;
+                } else {
+                    System.out.println("Number invalid, Please input a 7 or 10 digit number");
+                }
+            } while (willRunNum);
 
-            Files.write(contactFile, List.of(nameInput + " | " + numInput + " |"), StandardOpenOption.APPEND);
-
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
 
     }
 
-    public void deleteContact(){
-        try{
+    public void deleteContact() {
+        try {
             List<String> contactData = Files.readAllLines(Paths.get(directory, fileName));
             System.out.println("Please enter name to be deleted:");
             String input = scanner.nextLine();
             List<String> newList = new ArrayList<>();
 
-            for(String contact: contactData){
-                if(contact.contains(input)){
+            for (String contact : contactData) {
+                if (contact.contains(input)) {
                     continue;
                 }
                 newList.add(contact);
@@ -90,66 +95,68 @@ public class ContactsManager {
             contactData = Files.readAllLines(Paths.get(directory, fileName));
             printList();
 
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void printList(){
-        try{
+    public void printList() {
+        try {
             List<String> contactData = Files.readAllLines(Paths.get(directory, fileName));
             System.out.println("Name | Phone Number\n");
 
-            for (String contact: contactData){
+            for (String contact : contactData) {
                 System.out.println(contact);
             }
             System.out.println("");
 
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void searchContact(){
-        try{
+    public void searchContact() {
+        try {
             List<String> contactData = Files.readAllLines(Paths.get(directory, fileName));
             System.out.println("Please enter name to be searched:");
             String input = scanner.nextLine();
             System.out.println("Name | Phone Number\n");
 
-            for(String contact: contactData) {
+            for (String contact : contactData) {
                 if (contact.contains(input)) {
                     System.out.println(contact);
                 }
             }
             System.out.println("");
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
     //got info for pattern from: https://howtodoinjava.com/java/string/format-phone-number/#:~:text=Given%20below%20is%20a%20Java,%2D%23%23%23%23%20format.&text=String%20input%20%3D%20%221234567890%22%20%3B,%241)%20%242%2D%243%22%20)%3B
-    public String addDashes(String num){
+    public String numberFormat(String num) {
         try {
-            if(num.length() == 10){
-               String one = num.substring(0,3);
-               String two = num.substring(3,6);
-               String three = num.substring(6);
+            if (num.length() == 10) {
+                String one = num.substring(0, 3);
+                String two = num.substring(3, 6);
+                String three = num.substring(6);
 //                System.out.printf("(%s) %s-%s%n",one,two,three);
                 return "(" + one + ") " + two + "-" + three;
             }
 
-            if(num.length() == 7){
+            if (num.length() == 7) {
                 return num.replaceFirst("(\\d{3})(\\d+)", "$1-$2");
             }
 
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return num;
     }
+
+
 
 }
