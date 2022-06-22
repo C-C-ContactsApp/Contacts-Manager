@@ -81,11 +81,11 @@ public class ContactsManager {
         try {
             List<String> contactData = Files.readAllLines(Paths.get(directory, fileName));
             System.out.println("Please enter name to be deleted:");
-            String input = scanner.nextLine();
+            String input = scanner.nextLine().toLowerCase();
             List<String> newList = new ArrayList<>();
 
             for (String contact : contactData) {
-                if (contact.contains(input)) {
+                if (contact.toLowerCase().contains(input)) {
                     continue;
                 }
                 newList.add(contact);
@@ -120,11 +120,11 @@ public class ContactsManager {
         try {
             List<String> contactData = Files.readAllLines(Paths.get(directory, fileName));
             System.out.println("Please enter name to be searched:");
-            String input = scanner.nextLine();
+            String input = scanner.nextLine().toLowerCase();
             System.out.println("Name | Phone Number\n");
 
             for (String contact : contactData) {
-                if (contact.contains(input)) {
+                if (contact.toLowerCase().contains(input)) {
                     System.out.println(contact);
                 }
             }
